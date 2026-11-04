@@ -1,0 +1,17 @@
+# Paths `scripts/sync-from-host.sh` keeps when it filters the Cognia Host's
+# history (git filter-repo --paths-from-file). Changing this list changes every
+# filtered commit hash, so the next sync no longer fast-forwards: extend it
+# only together with a planned re-import.
+plugins/
+scripts/plugin/build-frontend-plugins.mjs
+scripts/plugin/build-frontend-plugins.test.mjs
+scripts/plugin/plugin-styles.mjs
+scripts/plugin/plugin-styles.test.mjs
+scripts/plugin/plugin-styles.browser.test.mjs
+scripts/plugin/bootstrap-authoring-kit.mjs
+scripts/plugin/bootstrap-authoring-kit.test.mjs
+scripts/plugin/artifacts/produce.mjs
+scripts/plugin/artifacts/builtin-chunks.mjs
+scripts/plugin/artifacts/builtin-chunks.test.mjs
+scripts/plugin/artifacts/desktop-plugins.mjs
+scripts/plugin/artifacts/desktop-plugins.test.mjs

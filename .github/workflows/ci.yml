@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Check, build and produce
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      # The kit must exist before `pnpm install`: its packages are `file:`
+      # dependencies under .vendor/authoring-kit/. Node built-ins only.
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26.x
+      - name: Bootstrap the pinned authoring kit
+        run: node scripts/bootstrap.mjs
+      # action-setup reads the root `packageManager` pin.
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26.x
+          cache: pnpm
+      - uses: astral-sh/setup-uv@v10
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Jest
+        run: pnpm test -- --maxWorkers=2
+      - name: node --test suites
+        run: pnpm test:node
+      - name: Python plugin suites
+        run: pnpm test:python
+      - name: Standalone ZIPs
+        run: pnpm build
+      - name: Artifact set
+        run: pnpm produce
+      - uses: actions/upload-artifact@v7
+        with:
+          name: plugin-artifacts-${{ github.sha }}
+          path: artifact/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v7
+        with:
+          name: plugin-packages-${{ github.sha }}
+          path: packages-out/
+          if-no-files-found: error

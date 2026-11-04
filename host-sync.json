@@ -1,0 +1,7 @@
+{
+  "$comment": "Last Host revision imported by scripts/sync-from-host.sh and the filtered commit it produced. Until the plugins extraction plan's P4 the Host's plugins/ stays authoritative; this repository only imports it.",
+  "host": "cognia-labs/cognia-next",
+  "ref": "dev",
+  "hostRevision": "9c378f0e4dbff9370369b16f6a69ab84d6e35eec",
+  "filteredHead": "cf2b50096d4e937874e12cc69e8acfcdfbfc7e1f"
+}

@@ -1,0 +1,39 @@
+# Dependencies and the pinned authoring kit (`pnpm bootstrap` restores both)
+node_modules
+.vendor/
+
+# Kit tooling installed by scripts/bootstrap.mjs. The Host owns these modules;
+# the copies come from the pinned kit and are never edited here.
+/scripts/build/
+
+# Build output
+/packages-out/
+/artifact/
+/coverage/
+dist
+# Package-owned static inputs may retain a runtime dist/ path (icon themes).
+# These are source resources, not generated plugin entry bundles.
+!plugins/*/resources/dist/
+!plugins/*/resources/dist/**
+/plugins/*/target/
+
+# Python
+__pycache__/
+.venv/
+.pytest_cache/
+
+# Pi LaTeX Workbench: vendor/ is an untouched upstream snapshot; what its
+# prepare step and a vendor/ cwd write into it is local machine state.
+/plugins/pi-latex-workbench/vendor/node_modules/
+/plugins/pi-latex-workbench/vendor/runtime/toolchain/
+/plugins/pi-latex-workbench/vendor/runtime/render/
+/plugins/pi-latex-workbench/vendor/.latexwb/
+/plugins/pi-latex-workbench/vendor/.latexwb-materialize/
+/plugins/pi-latex-workbench/.latexwb/
+
+.DS_Store
+*.log
+!plugins/*/fixtures/**/*.log
+
+# Build caches (esbuild input cache)
+/.cache/

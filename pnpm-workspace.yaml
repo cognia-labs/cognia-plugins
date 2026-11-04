@@ -1,0 +1,56 @@
+packages:
+  - .
+patchedDependencies:
+  "@sinonjs/fake-timers@15.4.0": patches/@sinonjs__fake-timers@15.4.0.patch
+  "@novnc/novnc@1.6.0": patches/@novnc__novnc@1.6.0.patch
+overrides:
+  react: 19.3.1
+  react-dom: 19.3.1
+  "@types/react": 19.3.0
+  "@types/react-dom": 19.3.0
+  motion: 13.4.4
+  "@babel/runtime": ^7.28.4
+  "@hono/node-server": ^2.0.5
+  adm-zip: ^0.6.0
+  minimatch@3.1.5>brace-expansion: 1.1.21
+  minimatch@5.1.9>brace-expansion: 2.1.7
+  minimatch@9.0.9>brace-expansion: 2.1.7
+  minimatch@10.2.6>brace-expansion: 5.0.12
+  mermaid: 12.0.0
+  pdfjs-dist: 6.3.289
+  shell-quote: 1.11.0
+  tmp: 0.2.7
+  dompurify: ^3.4.12
+  esbuild: ^0.28.1
+  postcss: ^8.5.10
+  sharp: ^0.35.5
+  tar: ^7.5.19
+  undici: ^7.29.1
+  uuid: ^11.1.1
+  valibot: ^1.4.2
+  vite-tsconfig-paths: ^6.1.1
+  "@xmldom/xmldom@>=0.7 <0.9": ^0.8.15
+  katex@<0.18.2: 0.18.2
+  linkify-it: ^5.0.2
+  lodash-es: ^4.18.1
+  source-map-js: ^1.2.2
+  vite@>=8.0.0 <=8.1.5: 8.1.6
+  webpack-dev-middleware: ^7.4.5
+  ai: "catalog:"
+  "@ai-sdk/provider": "catalog:"
+  "@ai-sdk/openai": "catalog:"
+  "@ai-sdk/anthropic": "catalog:"
+  "@ai-sdk/google": "catalog:"
+  "@ai-sdk/mistral": "catalog:"
+  "@ai-sdk/cohere": "catalog:"
+  "@ai-sdk/amazon-bedrock": "catalog:"
+catalog:
+  zod: 4.6.5
+  ai: 7.0.128
+  "@ai-sdk/provider": 4.0.22
+  "@ai-sdk/openai": 4.0.84
+  "@ai-sdk/anthropic": 4.0.72
+  "@ai-sdk/google": 4.0.88
+  "@ai-sdk/mistral": 4.0.57
+  "@ai-sdk/cohere": 4.0.55
+  "@ai-sdk/amazon-bedrock": 5.0.106
