@@ -39,7 +39,7 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
       - name: Jest
-        run: pnpm test -- --maxWorkers=2
+        run: pnpm test --maxWorkers=2
       - name: node --test suites
         run: pnpm test:node
       - name: Python plugin suites
