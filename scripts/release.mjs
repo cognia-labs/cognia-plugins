@@ -12,8 +12,9 @@
 //
 // `pack` writes `cognia-plugin-artifacts-<tag>.tar.gz`, a reproducible ustar
 // archive under `plugin-artifacts/` (sorted entries, mtime 0, uid/gid 0, mode
-// 0644 or 0755), with a `release.json` that ties the tag to the source
-// revision, kit, profile and archive digest, and a `SHA256SUMS` over both.
+// 0644 or 0755, gzip OS byte fixed to Unix), with a `release.json` that ties
+// the tag to the source revision, kit, profile and archive digest, and a
+// `SHA256SUMS` over both.
 
 import { createHash } from "node:crypto"
 import fs from "node:fs"
@@ -25,6 +26,9 @@ export const SET_MANIFEST = "plugin-artifacts.json"
 export const ARCHIVE_ROOT = "plugin-artifacts"
 export const RELEASE_MANIFEST = "release.json"
 export const TAG_PATTERN = /^v\d+\.\d+\.\d+$/
+
+const GZIP_OS_OFFSET = 9
+const GZIP_OS_UNIX = 3
 
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex")
 
@@ -114,7 +118,11 @@ export function archiveSet(setDir) {
     )
   }
   chunks.push(Buffer.alloc(1024))
-  return gzipSync(Buffer.concat(chunks), { level: 9 })
+  const archive = gzipSync(Buffer.concat(chunks), { level: 9 })
+  // zlib stamps the host OS into the gzip header (3 on Linux, 19 on macOS);
+  // pin it to Unix so the archive bytes do not depend on where it was packed.
+  archive[GZIP_OS_OFFSET] = GZIP_OS_UNIX
+  return archive
 }
 
 /** Write the release assets for `tag` and return their descriptor. */

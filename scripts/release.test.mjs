@@ -60,6 +60,8 @@ test("the archive is reproducible and extracts back to the same set with system 
   const root = makeSet(t)
   const archive = archiveSet(root)
   assert.ok(archiveSet(root).equals(archive))
+  // gzip magic, deflate, no flags, mtime 0, max compression, OS = Unix on every platform.
+  assert.deepEqual([...archive.subarray(0, 10)], [0x1f, 0x8b, 8, 0, 0, 0, 0, 0, 2, 3])
   const out = fs.mkdtempSync(path.join(os.tmpdir(), "cognia-release-out-"))
   t.after(() => fs.rmSync(out, { recursive: true, force: true }))
   fs.writeFileSync(path.join(out, "set.tar.gz"), archive)
