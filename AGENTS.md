@@ -2,10 +2,10 @@
 
 Rules for coding agents in this repository. Read `README.md` first.
 
-## The Host is still authoritative
+## Plugin sources are maintained in cognia-labs/cognia
 
-Until phase P4 of the Host's plugins extraction plan
-(`docs/plans/2026-10-30-plugins-repository-extraction.md` in cognia-labs/cognia):
+The main Cognia repository (the Host) is the source of truth for plugin code; this
+repository imports it. Until that changes:
 
 1. **Never edit an imported file here**: anything under `plugins/` or `scripts/plugin/`,
    or any path listed in `host-sync-paths.txt`. Make the change in the Host and import it

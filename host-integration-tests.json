@@ -1,5 +1,5 @@
 {
-  "$comment": "Tests bound to the Cognia Host: they import Host modules (@/... or a relative path out of plugins/ into the Host tree), read Host files (the contract catalog, the distribution lists, app/globals.css), need a Host runtime port bound by the Host's own Jest setup, or compare a committed artifact against a build from the Host's workspace sources. They stay Host-owned (plugins extraction plan §10) and run in cognia-labs/cognia; this repository's Jest and node --test runs exclude exactly these files. The list may only shrink.",
+  "$comment": "Tests that depend on the main Cognia repository: they import its modules, read its files, need a runtime binding from its test setup, or compare a committed package with a build from its workspace sources. They run in cognia-labs/cognia and are excluded from this repository's Jest and node:test runs. Entries are removed as tests become self-contained; none are added to hide a failure.",
   "files": [
     "plugins/builtin-registry-coverage.test.ts",
     "plugins/cognia-anime-effort/src/index.test.tsx",

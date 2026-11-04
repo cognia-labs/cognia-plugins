@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Import new plugin history from the Cognia Host (plugins extraction plan §12,
-# P2–P4: the Host's plugins/ stays authoritative until P4).
+# Import new plugin history from the main Cognia repository (the Host), which
+# remains the source of truth for plugin code.
 #
 #   scripts/sync-from-host.sh <host checkout or clone URL> [ref]
 #
@@ -12,7 +12,7 @@
 # merges the new filtered history into the current branch and records the new
 # revisions in host-sync.json. Files this repository owns (its root config,
 # scripts/*.mjs, docs) are outside the path list, so the merge cannot touch them;
-# plugin files are never edited here before P4, so it cannot conflict either.
+# plugin files are not edited in this repository, so it cannot conflict either.
 set -euo pipefail
 
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
