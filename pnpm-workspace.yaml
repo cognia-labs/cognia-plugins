@@ -54,3 +54,9 @@ catalog:
   "@ai-sdk/mistral": 4.0.57
   "@ai-sdk/cohere": 4.0.55
   "@ai-sdk/amazon-bedrock": 5.0.106
+# Native/binary installers the build and test toolchain needs (same choices as
+# the main Cognia repository).
+allowBuilds:
+  "@parcel/watcher": true
+  "@swc/core": true
+  esbuild: true
