@@ -5,6 +5,7 @@
 //
 //   node scripts/release.mjs compare <set A> <set B>
 //   node scripts/release.mjs pack --set <set dir> --tag <tag> --out <dir>
+//   node scripts/release.mjs notes <release.json>
 //
 // `compare` fails unless both sets hold the same files with the same bytes and
 // executable bits, the set manifest included.
@@ -158,6 +159,26 @@ export function packRelease({ setDir, tag, outDir }) {
   return release
 }
 
+/** Markdown release notes for a release descriptor. */
+export function releaseNotes(release) {
+  return [
+    `Plugin artifact set built from ${release.source.repository}@${release.source.revision}.`,
+    "",
+    "| | |",
+    "| --- | --- |",
+    `| Archive | \`${release.archive.name}\` |`,
+    `| Archive SHA-256 | \`${release.archive.sha256}\` |`,
+    `| Set manifest SHA-256 | \`${release.set.manifestSha256}\` |`,
+    `| Files / plugins | ${release.set.files} / ${release.set.plugins} |`,
+    `| Product profile | ${release.profile.name} \`${release.profile.sha256}\` |`,
+    `| Plugin SDK / UI / contract | ${release.authoring.sdkVersion} / ${release.authoring.uiVersion} / ${release.authoring.contractVersion} |`,
+    `| Node.js | ${release.toolchain.nodeVersion} |`,
+    "",
+    "Produced on Linux and macOS with byte-identical results. Verify the download with `sha256sum -c SHA256SUMS`.",
+    "",
+  ].join("\n")
+}
+
 function argument(argv, name) {
   const index = argv.indexOf(name)
   return index >= 0 ? argv[index + 1] : undefined
@@ -181,9 +202,11 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
       outDir: path.resolve(argument(rest, "--out")),
     })
     console.log(`[release] ${release.archive.name} ${release.archive.sha256} (${release.set.files} files)`)
+  } else if (command === "notes" && rest.length === 1) {
+    process.stdout.write(releaseNotes(JSON.parse(fs.readFileSync(path.resolve(rest[0]), "utf8"))))
   } else {
     console.error(
-      "usage: release.mjs compare <set A> <set B>\n       release.mjs pack --set <dir> --tag <vX.Y.Z> --out <dir>"
+      "usage: release.mjs compare <set A> <set B>\n       release.mjs pack --set <dir> --tag <vX.Y.Z> --out <dir>\n       release.mjs notes <release.json>"
     )
     process.exit(2)
   }

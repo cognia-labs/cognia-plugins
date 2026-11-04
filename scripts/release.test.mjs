@@ -5,7 +5,7 @@ import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
 import { test } from "node:test"
-import { archiveSet, compareSets, listSet, packRelease } from "./release.mjs"
+import { archiveSet, compareSets, listSet, packRelease, releaseNotes } from "./release.mjs"
 
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex")
 const LONG = `builtin-plugins/${"a".repeat(40)}/${"b".repeat(64)}.cjs`
@@ -85,6 +85,9 @@ test("pack writes the archive, a release descriptor and their checksums", (t) =>
   assert.equal(release.set.manifestSha256, sha256(fs.readFileSync(path.join(root, "plugin-artifacts.json"))))
   assert.deepEqual([release.set.files, release.set.plugins], [3, 1])
   assert.equal(release.source.revision, "1".repeat(40))
+  const notes = releaseNotes(release)
+  assert.match(notes, /test\/plugins@1{40}/)
+  assert.ok(notes.includes(release.archive.sha256) && notes.includes(release.set.manifestSha256))
   assert.equal(
     fs.readFileSync(path.join(out, "SHA256SUMS"), "utf8"),
     `${sha256(archive)}  cognia-plugin-artifacts-v1.2.3.tar.gz\n${sha256(descriptor)}  release.json\n`

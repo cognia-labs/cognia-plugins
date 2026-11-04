@@ -129,24 +129,6 @@ jobs:
             echo "::error::$TAG already has a release; published assets are never replaced"
             exit 1
           fi
-          node -e '
-            const r = require("./release/release.json")
-            const lines = [
-              `Plugin artifact set built from ${r.source.repository}@${r.source.revision}.`,
-              "",
-              "| | |",
-              "| --- | --- |",
-              `| Archive | \`${r.archive.name}\` |`,
-              `| Archive SHA-256 | \`${r.archive.sha256}\` |`,
-              `| Set manifest SHA-256 | \`${r.set.manifestSha256}\` |`,
-              `| Files / plugins | ${r.set.files} / ${r.set.plugins} |`,
-              `| Product profile | ${r.profile.name} \`${r.profile.sha256}\` |`,
-              `| Plugin SDK / UI / contract | ${r.authoring.sdkVersion} / ${r.authoring.uiVersion} / ${r.authoring.contractVersion} |`,
-              `| Node.js | ${r.toolchain.nodeVersion} |`,
-              "",
-              "Produced on Linux and macOS with byte-identical results. Verify with `sha256sum -c SHA256SUMS`.",
-            ]
-            require("node:fs").writeFileSync("notes.md", lines.join("\n") + "\n")
-          '
+          node scripts/release.mjs notes release/release.json > notes.md
           gh release create "$TAG" release/* --verify-tag --title "$TAG" --notes-file notes.md --draft
           gh release edit "$TAG" --draft=false
