@@ -46,6 +46,21 @@ installed from that directory.
 | `pnpm build`       | Build the standalone plugin packages into `packages-out/`                |
 | `pnpm produce`     | Produce the plugin artifact set into `artifact/`                         |
 
+## Releases
+
+Pushing a version tag (`v1.2.3`) on a commit of `main` runs `.github/workflows/release.yml`:
+the set is produced on Linux and macOS, both archives must be byte-for-byte identical, and the
+release is published with three assets:
+
+- `cognia-plugin-artifacts-<tag>.tar.gz`: the set under `plugin-artifacts/`, as a
+  reproducible archive (`scripts/release.mjs pack`);
+- `release.json`: the source revision, authoring kit identity, product profile, set manifest
+  digest and archive digest;
+- `SHA256SUMS`: checksums of both.
+
+A tag that already has a release is refused, and published releases are immutable. A new
+plugin build is always a new version.
+
 ## Repository layout
 
 | Path                                    | Contents                                                       |

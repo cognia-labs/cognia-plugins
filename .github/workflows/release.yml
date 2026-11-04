@@ -1,0 +1,149 @@
+name: Release
+
+# Publish an immutable plugin artifact set for a version tag (v1.2.3) on main.
+# The set is produced on Linux and macOS from the same commit, and the release
+# is created only if both archives are byte-for-byte identical. A tag that
+# already has a release is refused: published bytes are never replaced.
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  produce:
+    name: Produce on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+      - name: Bootstrap the pinned authoring kit
+        run: node scripts/bootstrap.mjs
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Checks
+        if: runner.os == 'Linux'
+        run: |
+          pnpm typecheck
+          pnpm test --maxWorkers=2
+          pnpm test:node
+      - uses: astral-sh/setup-uv@v10.3.3
+        if: runner.os == 'Linux'
+      - name: Python plugin suites
+        if: runner.os == 'Linux'
+        run: pnpm test:python
+      - name: Produce and pack the set
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          pnpm produce
+          node scripts/release.mjs pack --set artifact --tag "$TAG" --out release
+      # The archive carries the executable bits; upload-artifact would drop them.
+      - uses: actions/upload-artifact@v7
+        with:
+          name: release-${{ runner.os }}
+          path: release/
+          if-no-files-found: error
+
+  compare:
+    name: Compare Linux and macOS
+    needs: produce
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: release-*
+      - name: Archives and descriptors are identical
+        run: |
+          set -euo pipefail
+          cmp release-Linux/release.json release-macOS/release.json
+          cmp release-Linux/SHA256SUMS release-macOS/SHA256SUMS
+          archive="$(node -p 'require("./release-Linux/release.json").archive.name')"
+          cmp "release-Linux/$archive" "release-macOS/$archive"
+          (cd release-Linux && sha256sum -c SHA256SUMS)
+          for os in Linux macOS; do
+            mkdir -p "unpacked-$os"
+            tar -xzf "release-$os/$archive" -C "unpacked-$os"
+          done
+          node scripts/release.mjs compare unpacked-Linux/plugin-artifacts unpacked-macOS/plugin-artifacts
+
+  release:
+    name: Publish
+    needs: compare
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+      - uses: actions/download-artifact@v8
+        with:
+          name: release-Linux
+          path: release
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          git fetch --quiet origin main
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "::error::$TAG does not point at a commit on main"
+            exit 1
+          fi
+          revision="$(node -p 'require("./release/release.json").source.revision')"
+          if [ "$revision" != "$GITHUB_SHA" ]; then
+            echo "::error::the set was produced from $revision, not $GITHUB_SHA"
+            exit 1
+          fi
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "::error::$TAG already has a release; published assets are never replaced"
+            exit 1
+          fi
+          node -e '
+            const r = require("./release/release.json")
+            const lines = [
+              `Plugin artifact set built from ${r.source.repository}@${r.source.revision}.`,
+              "",
+              "| | |",
+              "| --- | --- |",
+              `| Archive | \`${r.archive.name}\` |`,
+              `| Archive SHA-256 | \`${r.archive.sha256}\` |`,
+              `| Set manifest SHA-256 | \`${r.set.manifestSha256}\` |`,
+              `| Files / plugins | ${r.set.files} / ${r.set.plugins} |`,
+              `| Product profile | ${r.profile.name} \`${r.profile.sha256}\` |`,
+              `| Plugin SDK / UI / contract | ${r.authoring.sdkVersion} / ${r.authoring.uiVersion} / ${r.authoring.contractVersion} |`,
+              `| Node.js | ${r.toolchain.nodeVersion} |`,
+              "",
+              "Produced on Linux and macOS with byte-identical results. Verify with `sha256sum -c SHA256SUMS`.",
+            ]
+            require("node:fs").writeFileSync("notes.md", lines.join("\n") + "\n")
+          '
+          gh release create "$TAG" release/* --verify-tag --title "$TAG" --notes-file notes.md --draft
+          gh release edit "$TAG" --draft=false
