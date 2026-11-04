@@ -4,10 +4,12 @@ name: Release
 # The set is produced on Linux and macOS from the same commit, and the release
 # is created only if both archives are byte-for-byte identical. A tag that
 # already has a release is refused: published bytes are never replaced.
+# A manual run produces and compares the set as v0.0.0 without publishing.
 
 on:
   push:
     tags: ["v*.*.*"]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -52,7 +54,7 @@ jobs:
         run: pnpm test:python
       - name: Produce and pack the set
         env:
-          TAG: ${{ github.ref_name }}
+          TAG: ${{ github.event_name == 'push' && github.ref_name || 'v0.0.0' }}
         run: |
           pnpm produce
           node scripts/release.mjs pack --set artifact --tag "$TAG" --out release
@@ -92,6 +94,7 @@ jobs:
   release:
     name: Publish
     needs: compare
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
       contents: write
