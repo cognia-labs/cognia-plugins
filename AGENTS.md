@@ -5,7 +5,7 @@ Rules for coding agents in this repository. Read `README.md` first.
 ## The Host is still authoritative
 
 Until phase P4 of the Host's plugins extraction plan
-(`docs/plans/2026-10-30-plugins-repository-extraction.md` in cognia-labs/cognia-next):
+(`docs/plans/2026-10-30-plugins-repository-extraction.md` in cognia-labs/cognia):
 
 1. **Never edit an imported file here**: anything under `plugins/` or `scripts/plugin/`,
    or any path listed in `host-sync-paths.txt`. Make the change in the Host and import it

@@ -1,6 +1,6 @@
 # cognia-plugins
 
-The first-party plugins of [Cognia](https://github.com/cognia-labs/cognia-next): their
+The first-party plugins of [Cognia](https://github.com/cognia-labs/cognia): their
 sources, the packager that turns them into standalone install ZIPs, and the producer that
 turns them into the plugin artifact set the Cognia app ships.
 
