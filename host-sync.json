@@ -2,6 +2,6 @@
   "$comment": "The last revision of the main Cognia repository imported by scripts/sync-from-host.sh, and the filtered commit it produced.",
   "host": "cognia-labs/cognia",
   "ref": "dev",
-  "hostRevision": "22255f01c1dfb6c7d8cb6184e2a74877246272cc",
-  "filteredHead": "27031c3c089d1a1afc63a6c2eb2578d211f9c8ac"
+  "hostRevision": "a1f113309df207ad5689b80abcee7c102bcef68e",
+  "filteredHead": "6c6b520fa3da36dd039889edbfb384a6301a1f99"
 }
