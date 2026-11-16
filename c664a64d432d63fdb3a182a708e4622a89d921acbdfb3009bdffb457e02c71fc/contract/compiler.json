@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "target": "es2022",
+  "packageType": "commonjs",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "alwaysStrict": true,
+    "useDefineForClassFields": false
+  },
+  "inputs": []
+}
