@@ -380,12 +380,12 @@ packages:
     engines: {node: '>=26.0.0'}
 
   '@cognia/plugin-sdk@file:.vendor/authoring-kit/cognia-plugin-sdk-0.3.0.tgz':
-    resolution: {integrity: sha512-bn9G6So9V2Sr8dFSnm6Fkzdadf9GVWuQeiXC+vF6Gbk3A0WheA2ZrF+nA1NV0sttYQxWvQQaSnMjIOXpLpD6DA==, tarball: file:.vendor/authoring-kit/cognia-plugin-sdk-0.3.0.tgz}
+    resolution: {integrity: sha512-IagyQtwfLLypUjm6VlrV001TlYb5r3SvadOEgKIMgGEjxNuFC9oyzOhEQrLshrGhTQZzLbni5ZBwnSZ8h3vuug==, tarball: file:.vendor/authoring-kit/cognia-plugin-sdk-0.3.0.tgz}
     version: 0.3.0
     engines: {node: '>=26.0.0'}
 
   '@cognia/plugin-ui@file:.vendor/authoring-kit/cognia-plugin-ui-0.2.0.tgz':
-    resolution: {integrity: sha512-92vf6XfJFZOJCWNqcRuPuZKyMHysy2x5lWzxq7a514SeOkbvOJscxt4g+QCIG+ayUOs0//5Rk+nKL++eZDqgxA==, tarball: file:.vendor/authoring-kit/cognia-plugin-ui-0.2.0.tgz}
+    resolution: {integrity: sha512-uUXVCxHb1EFNsDUaJYUTF7V24B0p8yS40HMR/sd36kRYJU8daYf29kqvlz4VBZlKz+B16PT6t1xLBbGW0MxrDg==, tarball: file:.vendor/authoring-kit/cognia-plugin-ui-0.2.0.tgz}
     version: 0.2.0
     engines: {node: '>=26.0.0'}
 
