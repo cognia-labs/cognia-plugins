@@ -380,7 +380,7 @@ packages:
     engines: {node: '>=26.0.0'}
 
   '@cognia/plugin-sdk@file:.vendor/authoring-kit/cognia-plugin-sdk-0.3.0.tgz':
-    resolution: {integrity: sha512-2r8OJDTUxvEiAuUgOR3QlrFtWrVjQev9rShVwc7fi0pN61owpaHrDguggWxpEfJlddyeW8Yj9LnQyZBTGCiMZQ==, tarball: file:.vendor/authoring-kit/cognia-plugin-sdk-0.3.0.tgz}
+    resolution: {integrity: sha512-bVU4CahMRF6GW5J0jTB0zCb2hxKj8APTV81KHX9me4j0bL/oAIOL2tWe8HYZQ92BU/kcfe7f7q2rEleXSc6xUQ==, tarball: file:.vendor/authoring-kit/cognia-plugin-sdk-0.3.0.tgz}
     version: 0.3.0
     engines: {node: '>=26.0.0'}
 
